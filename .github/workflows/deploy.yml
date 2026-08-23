@@ -25,7 +25,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        # npm install (not `npm ci`): package-lock.json was generated on
+        # Windows and only resolved the win32-x64-msvc native binary for
+        # lightningcss (Tailwind v4's CSS engine); `npm ci` refuses to add
+        # anything not already recorded per-platform in the lockfile, so it
+        # fails on the linux-x64 runner. `npm install` re-resolves optional
+        # native deps for the current platform instead.
+        run: npm install
 
       - name: Lint
         run: npm run lint
