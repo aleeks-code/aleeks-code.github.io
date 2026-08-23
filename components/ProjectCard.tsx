@@ -38,7 +38,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               href={project.repoUrl}
               className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              Code
+              Codice
             </a>
           )}
           {project.liveUrl && (
@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               href={project.liveUrl}
               className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              Live
+              Demo
             </a>
           )}
         </div>

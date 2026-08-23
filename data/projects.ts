@@ -11,31 +11,31 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: 'Project One',
+    title: 'Progetto Uno',
     description:
-      'Placeholder description of project one. Replace with a real project summary.',
-    role: 'Solo project',
-    impact: 'Replace with a concrete outcome, e.g. reduced load time by 40%.',
+      'Descrizione segnaposto del primo progetto. Da sostituire con un caso reale.',
+    role: 'Progetto personale',
+    impact: 'Sostituisci con un risultato concreto, es. tempo di caricamento ridotto del 40%.',
     tags: ['TypeScript', 'React'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-1.svg',
   },
   {
-    title: 'Project Two',
+    title: 'Progetto Due',
     description:
-      'Placeholder description of project two. Replace with a real project summary.',
-    role: 'Team project — led the frontend',
-    impact: 'Replace with a concrete outcome, e.g. shipped to 1,000+ users.',
+      'Descrizione segnaposto del secondo progetto. Da sostituire con un caso reale.',
+    role: 'Progetto di gruppo — frontend',
+    impact: 'Sostituisci con un risultato concreto, es. oltre 1.000 utenti raggiunti.',
     tags: ['Next.js', 'Tailwind CSS'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-2.svg',
   },
   {
-    title: 'Project Three',
+    title: 'Progetto Tre',
     description:
-      'Placeholder description of project three. Replace with a real project summary.',
-    role: 'Solo project',
-    impact: 'Replace with a concrete outcome.',
+      'Descrizione segnaposto del terzo progetto. Da sostituire con un caso reale.',
+    role: 'Progetto personale',
+    impact: 'Sostituisci con un risultato concreto.',
     tags: ['Node.js', 'PostgreSQL'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-3.svg',

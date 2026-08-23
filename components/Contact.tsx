@@ -58,16 +58,16 @@ export default function Contact() {
   return (
     <section id="contact" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
       <h2 className="font-mono text-2xl font-semibold text-slate-900">
-        <span className="text-blue-600">{'// '}</span>Contact
+        <span className="text-blue-600">{'// '}</span>Contatti
       </h2>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4 max-w-md">
         <div className="hidden" aria-hidden="true">
-          <label htmlFor="_gotcha">Leave this field empty</label>
+          <label htmlFor="_gotcha">Lascia questo campo vuoto</label>
           <input id="_gotcha" name="_gotcha" type="text" tabIndex={-1} autoComplete="off" />
         </div>
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-            Name
+            Nome
           </label>
           <input
             id="name"
@@ -91,7 +91,7 @@ export default function Contact() {
         </div>
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-slate-700">
-            Message
+            Messaggio
           </label>
           <textarea
             id="message"
@@ -106,28 +106,28 @@ export default function Contact() {
           disabled={status === 'loading'}
           className="rounded-md bg-blue-600 px-6 py-3 text-white transition-colors duration-200 hover:bg-blue-700 disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
         >
-          {status === 'loading' ? 'Sending...' : 'Send'}
+          {status === 'loading' ? 'Invio...' : 'Invia'}
         </button>
         <div aria-live="polite">
           {status === 'success' && (
             <p className="text-green-600">
-              Thanks for your message! I will get back to you soon.
+              Grazie per il messaggio! Ti risponderò al più presto.
             </p>
           )}
           {status === 'error' && (
             <p className="text-red-600">
-              Something went wrong. Please try again or email me directly below.
+              Qualcosa è andato storto. Riprova oppure scrivimi direttamente qui sotto.
             </p>
           )}
           {status === 'config-error' && (
             <p className="text-red-600">
-              The contact form isn&apos;t configured yet. Please email me directly below.
+              Il modulo di contatto non è ancora configurato. Scrivimi direttamente qui sotto.
             </p>
           )}
         </div>
       </form>
       <p className="mt-4 text-sm text-slate-600">
-        You can also reach me directly at{' '}
+        Puoi anche scrivermi direttamente a{' '}
         <a
           href={`mailto:${site.email}`}
           className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"

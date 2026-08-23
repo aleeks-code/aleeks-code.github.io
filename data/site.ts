@@ -4,17 +4,18 @@ export interface SiteInfo {
   tagline: string;
   bio: string;
   email: string;
-  githubUrl: string;
-  linkedinUrl: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
   cvUrl?: string;
 }
 
 export const site: SiteInfo = {
-  name: 'Your Name',
-  role: 'Software Developer',
-  tagline: 'Software developer building things for the web.',
-  bio: 'Placeholder bio. Replace this paragraph with a short description of your background, what you work on, and what you are looking for.',
-  email: 'you@example.com',
+  name: 'Alex Munafò',
+  role: 'Web Developer Junior',
+  tagline: 'Aiuto le attività a costruire il loro spazio online.',
+  bio: 'Realizzo siti vetrina, landing page e presenze online per attività commerciali che vogliono farsi trovare sul web. L’obiettivo è dare a ogni attività uno spazio digitale curato, semplice da gestire e pensato per portare clienti reali.',
+  email: 'alexmunni@outlook.it',
   githubUrl: 'https://github.com/aleeks-code',
-  linkedinUrl: 'https://linkedin.com/in/your-profile',
+  instagramUrl: 'https://www.instagram.com/xdmunni/',
 };

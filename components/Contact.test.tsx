@@ -15,16 +15,16 @@ describe('Contact', () => {
   });
 
   function fillAndSubmit() {
-    fireEvent.change(screen.getByLabelText(/name/i), {
+    fireEvent.change(screen.getByLabelText(/nome/i), {
       target: { value: 'Jane Doe' },
     });
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: 'jane@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/message/i), {
+    fireEvent.change(screen.getByLabelText(/messaggio/i), {
       target: { value: 'Hello there' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /send/i }));
+    fireEvent.click(screen.getByRole('button', { name: /invia/i }));
   }
 
   it('shows a success message after a successful submission', async () => {
@@ -34,7 +34,7 @@ describe('Contact', () => {
     fillAndSubmit();
 
     await waitFor(() =>
-      expect(screen.getByText(/thanks.*message/i)).toBeInTheDocument()
+      expect(screen.getByText(/grazie.*messaggio/i)).toBeInTheDocument()
     );
   });
 
@@ -45,7 +45,7 @@ describe('Contact', () => {
     fillAndSubmit();
 
     await waitFor(() =>
-      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/qualcosa è andato storto/i)).toBeInTheDocument()
     );
   });
 
@@ -56,7 +56,7 @@ describe('Contact', () => {
     fillAndSubmit();
 
     await waitFor(() =>
-      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/qualcosa è andato storto/i)).toBeInTheDocument()
     );
   });
 
@@ -71,12 +71,12 @@ describe('Contact', () => {
 
     fillAndSubmit();
 
-    expect(await screen.findByRole('button', { name: /sending/i })).toBeDisabled();
+    expect(await screen.findByRole('button', { name: /invio/i })).toBeDisabled();
 
     resolveFetch({ ok: true });
 
     await waitFor(() =>
-      expect(screen.getByText(/thanks.*message/i)).toBeInTheDocument()
+      expect(screen.getByText(/grazie.*messaggio/i)).toBeInTheDocument()
     );
   });
 
@@ -87,7 +87,7 @@ describe('Contact', () => {
     fillAndSubmit();
 
     await waitFor(() =>
-      expect(screen.getByText(/isn.t configured yet/i)).toBeInTheDocument()
+      expect(screen.getByText(/non è ancora configurato/i)).toBeInTheDocument()
     );
     expect(global.fetch).not.toHaveBeenCalled();
   });

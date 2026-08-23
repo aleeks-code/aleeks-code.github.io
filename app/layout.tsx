@@ -11,7 +11,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const title = `${site.name} — ${site.role}`;
-const description = `Portfolio of ${site.name}, ${site.role.toLowerCase()}. Projects, skills, and contact.`;
+const description = `Portfolio di ${site.name}, ${site.role.toLowerCase()}. Progetti, competenze e contatti.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aleeks-code.github.io'),
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="it" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-white text-slate-900 font-sans antialiased">
         {children}
       </body>

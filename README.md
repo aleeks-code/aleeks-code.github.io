@@ -55,7 +55,9 @@ One-time setup required before the first deploy works:
 ## Content
 
 Update placeholder content in:
-- `data/site.ts` (name, role, bio, email, social links, optional CV link)
+- `data/site.ts` (name, role, bio, email, social links — `githubUrl`,
+  `linkedinUrl`, `instagramUrl` are all optional, only set ones are shown
+  in the footer — plus an optional CV link)
 - `data/projects.ts` (include real screenshots in `public/projects/`, and a
   concrete `role`/`impact` per project — a project without a stated outcome
   reads as generic)

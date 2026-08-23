@@ -21,14 +21,14 @@ export default function Hero() {
             href="#projects"
             className="inline-block rounded-md bg-blue-600 px-6 py-3 text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
           >
-            View my projects
+            Guarda i miei progetti
           </a>
           {site.cvUrl && (
             <a
               href={site.cvUrl}
               className="inline-block rounded-md border border-slate-300 px-6 py-3 text-slate-700 transition-colors duration-200 hover:bg-slate-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
             >
-              Download CV
+              Scarica CV
             </a>
           )}
         </div>

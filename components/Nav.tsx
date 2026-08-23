@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { site } from '@/data/site';
 
 const links = [
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#about', label: 'Chi sono' },
+  { href: '#projects', label: 'Progetti' },
+  { href: '#skills', label: 'Competenze' },
+  { href: '#contact', label: 'Contatti' },
 ];
 
 export default function Nav() {
@@ -25,12 +25,12 @@ export default function Nav() {
         <button
           type="button"
           className="sm:hidden font-mono text-sm text-slate-700 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
-          aria-label="Toggle menu"
+          aria-label="Apri o chiudi il menu"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((prev) => !prev)}
         >
-          {open ? 'Close' : 'Menu'}
+          {open ? 'Chiudi' : 'Menu'}
         </button>
         <ul className="hidden sm:flex gap-6 font-mono text-sm uppercase tracking-wide">
           {links.map((link) => (

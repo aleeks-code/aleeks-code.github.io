@@ -1,10 +1,10 @@
 import { skills } from '@/data/skills';
 
 const categoryLabels: Record<string, string> = {
-  language: 'Languages',
-  framework: 'Frameworks & Libraries',
-  tool: 'Tools',
-  other: 'Other',
+  language: 'Linguaggi',
+  framework: 'Framework e Librerie',
+  tool: 'Strumenti',
+  other: 'Altro',
 };
 
 export default function Skills() {
@@ -14,7 +14,7 @@ export default function Skills() {
     <section id="skills" className="scroll-mt-20 bg-slate-50">
       <div className="mx-auto max-w-4xl px-4 py-16">
         <h2 className="font-mono text-2xl font-semibold text-slate-900">
-          <span className="text-blue-600">{'// '}</span>Skills
+          <span className="text-blue-600">{'// '}</span>Competenze
         </h2>
         <div className="mt-6 space-y-6">
           {categories.map((category) => (
