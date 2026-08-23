@@ -3,7 +3,7 @@ import type { Project } from '@/data/projects';
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="rounded-lg border border-gray-200 overflow-hidden">
+    <article className="rounded-lg border border-slate-200 overflow-hidden transition-shadow duration-200 hover:shadow-lg">
       <Image
         src={project.imageSrc}
         alt={`${project.title} preview`}
@@ -12,19 +12,22 @@ export default function ProjectCard({ project }: { project: Project }) {
         className="w-full h-40 object-cover"
       />
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900">{project.title}</h3>
+        <h3 className="font-semibold text-slate-900">{project.title}</h3>
         {project.role && (
-          <p className="mt-1 text-xs font-medium text-blue-600 uppercase tracking-wide">
+          <p className="mt-1 font-mono text-xs font-medium text-blue-600 uppercase tracking-wide">
             {project.role}
           </p>
         )}
-        <p className="mt-2 text-sm text-gray-600">{project.description}</p>
+        <p className="mt-2 text-sm text-slate-600">{project.description}</p>
         {project.impact && (
-          <p className="mt-2 text-sm text-gray-800 font-medium">{project.impact}</p>
+          <p className="mt-2 text-sm text-slate-800 font-medium">{project.impact}</p>
         )}
         <ul className="mt-3 flex flex-wrap gap-2">
           {project.tags.map((tag) => (
-            <li key={tag} className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1">
+            <li
+              key={tag}
+              className="font-mono text-xs bg-slate-100 text-slate-700 rounded px-2 py-1"
+            >
               {tag}
             </li>
           ))}
