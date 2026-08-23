@@ -2,36 +2,41 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a static, single-page Next.js developer portfolio with placeholder content, a working Formspree contact form, and a GitHub Actions workflow that deploys it to GitHub Pages.
+**Goal:** Build a static, single-page Next.js developer portfolio with placeholder content, a working Formspree contact form, and a GitHub Actions workflow that validates every PR and deploys to GitHub Pages on push to `main`.
 
-**Architecture:** Next.js 14 (App Router) + TypeScript, statically exported (`output: 'export'`) to plain HTML/CSS/JS. One page composed of section components (Nav, Hero, About, Projects, Skills, Contact, Footer) reading placeholder content from typed data files. Tailwind CSS for styling. GitHub Actions builds and publishes `out/` to GitHub Pages on every push to `main`.
+**Architecture:** Next.js 16 (App Router) + TypeScript + React 19, statically exported (`output: 'export'`) to plain HTML/CSS/JS. One page composed of section components (Nav, Hero, About, Projects, Skills, Contact, Footer) reading placeholder content from typed data files — all site-wide copy (name, role, bio, email, socials, metadata) lives in one `data/site.ts`. Tailwind CSS v4 for styling (CSS-first config, no JS config file). GitHub Actions lints/typechecks/tests/builds on every push and PR, and deploys `out/` to GitHub Pages only on push to `main`.
 
-**Tech Stack:** Next.js 14, React 18, TypeScript 5, Tailwind CSS 3, Jest + React Testing Library (Contact form only), GitHub Actions (`actions/deploy-pages`), Formspree (external form backend).
+**Tech Stack:** Next.js 16, React 19, TypeScript 5, Tailwind CSS v4, ESLint 9 (flat config), Jest + React Testing Library (Contact form only), GitHub Actions (`actions/deploy-pages`), Formspree (external form backend).
 
-**Spec:** `docs/superpowers/specs/2026-08-23-portfolio-design.md`
+**Spec:** `docs/superpowers/specs/2026-08-23-portfolio-design.md` (v2)
 
 ## Global Constraints
 
 - Static export only: `output: 'export'` in `next.config.mjs`, `images.unoptimized: true` — no API routes, no SSR, no server-side image optimization.
+- `next.config.mjs`, not `next.config.ts` — native TS config needs Node ≥22.10 without extra flags; `.mjs` avoids coupling the build to a specific Node version.
+- `cacheComponents` stays off (the default) — Next 16's new caching model has open bugs with `output: 'export'`, and this app has no dynamic routes or data fetching to benefit from it anyway.
 - Single page, anchor-based navigation — no multi-route pages, no blog, no CMS.
-- Content lives in `data/projects.ts` and `data/skills.ts` (typed arrays) — components must not hardcode project/skill content.
-- Styling via Tailwind CSS only — no separate hand-written CSS files per component.
-- Contact form posts to Formspree at `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`; the real form ID is a placeholder filled in later by the site owner (open item, not part of this plan).
-- GitHub repo must be named exactly `aleeks-code.github.io` (user site, root domain, no `basePath`). Deploy workflow triggers on push to `main`.
-- Testing scope is intentionally narrow: only the Contact form's submit state machine gets automated tests (React Testing Library). No test framework/suite for presentational components — matches the spec's YAGNI stance.
+- **All** site-wide copy — name, role, tagline, bio, email, social URLs, CV link, page metadata — lives in `data/site.ts`. Project/skill content lives in `data/projects.ts` / `data/skills.ts`. Components must not hardcode any of this content.
+- Styling via Tailwind CSS v4 only — CSS-first (`@theme` in `app/globals.css`), no `tailwind.config.ts`, no hand-written per-component CSS files.
+- Every focusable interactive element gets a visible `focus-visible` ring. Every section anchor target gets `scroll-mt-20` so the sticky nav never covers the heading it just scrolled to.
+- `next lint` is gone in Next 16 — linting is `eslint .` via a flat `eslint.config.mjs`, run as its own CI/verification step, not folded into `next build`.
+- Contact form: JSON body (not `FormData`) to `https://formspree.io/f/${NEXT_PUBLIC_FORMSPREE_ID}`, a honeypot field (`_gotcha`), a guard that shows a distinct configuration-error message (no network call) when the env var is unset, `aria-live="polite"` on the status message, and a `mailto:` fallback below the form. No spinner graphic — disabled button + "Sending…" text is the whole loading affordance.
+- `NEXT_PUBLIC_FORMSPREE_ID` is passed to CI as a GitHub Actions **repository variable** (`vars` context), not a secret — it's inlined into public client-side JS regardless, so `secrets` would misrepresent its protection.
+- CI runs lint/typecheck/test/build on push **and** pull request; the deploy step only runs on push to `main`.
+- GitHub repo must be named exactly `aleeks-code.github.io` (user site, root domain, no `basePath`).
+- Testing scope stays narrow: only the Contact form's submit logic (success, non-OK response, thrown/rejected fetch, loading state, missing-config guard) gets automated tests. No test suite for presentational components.
 - Import alias `@/*` resolves to the project root (e.g. `@/data/projects`, `@/components/Nav`).
 
 ---
 
-### Task 1: Project Scaffold — Next.js + TypeScript + Tailwind, static export
+### Task 1: Project Scaffold — Next.js 16 + TypeScript + Tailwind v4, static export
 
 **Files:**
 - Create: `package.json`
 - Create: `tsconfig.json`
 - Create: `next.config.mjs`
-- Create: `tailwind.config.ts`
 - Create: `postcss.config.mjs`
-- Create: `.eslintrc.json`
+- Create: `eslint.config.mjs`
 - Create: `.gitignore`
 - Create: `next-env.d.ts`
 - Create: `app/layout.tsx`
@@ -40,7 +45,7 @@
 
 **Interfaces:**
 - Consumes: nothing (first task)
-- Produces: a buildable Next.js App Router skeleton — `app/layout.tsx` (minimal root layout, replaced fully in Task 2), `app/page.tsx` (placeholder, replaced fully in Task 9), `next.config.mjs` with static export configured, Tailwind wired into `app/globals.css`, `@/*` import alias in `tsconfig.json`, `npm run build` / `npm run typecheck` scripts.
+- Produces: a buildable Next.js App Router skeleton — `app/layout.tsx` (minimal root layout, replaced fully in Task 3), `app/page.tsx` (placeholder, replaced fully in Task 9), `next.config.mjs` with static export configured, Tailwind v4 wired into `app/globals.css`, `@/*` import alias in `tsconfig.json`, `npm run build` / `npm run lint` / `npm run typecheck` scripts.
 
 - [ ] **Step 1: Create `package.json`**
 
@@ -52,25 +57,26 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "serve": "npx --yes serve out",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "^14.2.0",
-    "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.15.0",
+    "eslint-config-next": "^16.0.0",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.0"
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5.7.0"
   }
 }
 ```
@@ -110,53 +116,50 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // cacheComponents intentionally left off (its default): this app has no
+  // dynamic routes or data fetching, and as of Next 16 the flag has open
+  // bugs interacting with output:'export'. See
+  // docs/superpowers/specs/2026-08-23-portfolio-design.md ("Architecture").
 };
 
 export default nextConfig;
 ```
 
-- [ ] **Step 4: Create `tailwind.config.ts`**
-
-```ts
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-
-export default config;
-```
-
-- [ ] **Step 5: Create `postcss.config.mjs`**
+- [ ] **Step 4: Create `postcss.config.mjs`**
 
 ```js
 /** @type {import('postcss-load-config').Config} */
 const config = {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+    '@tailwindcss/postcss': {},
   },
 };
 
 export default config;
 ```
 
-- [ ] **Step 6: Create `.eslintrc.json`**
+- [ ] **Step 5: Create `eslint.config.mjs`**
 
-```json
-{
-  "extends": "next/core-web-vitals"
-}
+```js
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+];
+
+export default eslintConfig;
 ```
 
-- [ ] **Step 7: Create `.gitignore`**
+- [ ] **Step 6: Create `.gitignore`**
 
 ```
 node_modules
@@ -167,14 +170,14 @@ out
 .DS_Store
 ```
 
-- [ ] **Step 8: Create `next-env.d.ts`**
+- [ ] **Step 7: Create `next-env.d.ts`**
 
 ```ts
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
 ```
 
-- [ ] **Step 9: Create `app/layout.tsx` (minimal — replaced in Task 2)**
+- [ ] **Step 8: Create `app/layout.tsx` (minimal — replaced in Task 3)**
 
 ```tsx
 import './globals.css';
@@ -192,15 +195,13 @@ export default function RootLayout({
 }
 ```
 
-- [ ] **Step 10: Create `app/globals.css`**
+- [ ] **Step 9: Create `app/globals.css`**
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 ```
 
-- [ ] **Step 11: Create `app/page.tsx` (placeholder — replaced in Task 9)**
+- [ ] **Step 10: Create `app/page.tsx` (placeholder — replaced in Task 9)**
 
 ```tsx
 export default function Home() {
@@ -208,136 +209,73 @@ export default function Home() {
 }
 ```
 
-- [ ] **Step 12: Install dependencies**
+- [ ] **Step 11: Install dependencies**
 
 Run: `npm install`
 Expected: installs without errors, creates `node_modules/` and `package-lock.json`.
 
-- [ ] **Step 13: Verify the static build works**
+- [ ] **Step 12: Verify lint, type check, and the static build**
 
-Run: `npm run build`
-Expected: `Compiled successfully`, and `out/index.html` exists after the build.
+Run: `npm run lint && npm run typecheck && npm run build`
+Expected: all three succeed; `Compiled successfully`; `out/index.html` exists after the build.
 
-- [ ] **Step 14: Commit**
+- [ ] **Step 13: Commit**
 
 ```bash
-git add package.json package-lock.json tsconfig.json next.config.mjs tailwind.config.ts postcss.config.mjs .eslintrc.json .gitignore next-env.d.ts app/
-git commit -m "chore: scaffold Next.js portfolio with static export"
+git add package.json package-lock.json tsconfig.json next.config.mjs postcss.config.mjs eslint.config.mjs .gitignore next-env.d.ts app/
+git commit -m "chore: scaffold Next.js 16 portfolio with Tailwind v4 and static export"
 ```
 
 ---
 
-### Task 2: Root Layout, Global Styles, Font
+### Task 2: Content Data Model
 
 **Files:**
-- Modify: `app/layout.tsx`
-- Modify: `app/globals.css`
-- Modify: `tailwind.config.ts`
-
-**Interfaces:**
-- Consumes: `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts` from Task 1
-- Produces: final root layout with metadata, self-hosted `Inter` font wired through Tailwind's `font-sans`, light-theme base body styles. All later section components render inside this layout via `app/page.tsx`.
-
-- [ ] **Step 1: Extend `tailwind.config.ts` with the font family**
-
-Add `fontFamily` under `theme.extend`:
-
-```ts
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-      },
-    },
-  },
-  plugins: [],
-};
-
-export default config;
-```
-
-- [ ] **Step 2: Update `app/globals.css`**
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html {
-  scroll-behavior: smooth;
-}
-```
-
-- [ ] **Step 3: Update `app/layout.tsx`**
-
-```tsx
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-
-export const metadata: Metadata = {
-  title: 'Your Name — Developer Portfolio',
-  description:
-    'Portfolio of Your Name, software developer. Projects, skills, and contact.',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" className={inter.variable}>
-      <body className="bg-white text-gray-900 font-sans antialiased">
-        {children}
-      </body>
-    </html>
-  );
-}
-```
-
-- [ ] **Step 4: Verify**
-
-Run: `npm run typecheck && npm run build`
-Expected: both succeed with no errors.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add app/layout.tsx app/globals.css tailwind.config.ts
-git commit -m "feat: add root layout, font, and base styles"
-```
-
----
-
-### Task 3: Content Data Model
-
-**Files:**
+- Create: `data/site.ts`
 - Create: `data/projects.ts`
 - Create: `data/skills.ts`
 - Create: `public/projects/placeholder-1.svg`
 - Create: `public/projects/placeholder-2.svg`
 - Create: `public/projects/placeholder-3.svg`
+- Create: `app/icon.svg`
 
 **Interfaces:**
 - Consumes: nothing
-- Produces: `Project` interface + `projects: Project[]` from `@/data/projects`; `Skill` interface + `skills: Skill[]` from `@/data/skills`. Used by Task 6 (`Projects`/`ProjectCard`) and Task 7 (`Skills`).
+- Produces: `SiteInfo` interface + `site: SiteInfo` from `@/data/site` (used by Tasks 3–9). `Project` interface + `projects: Project[]` from `@/data/projects` (used by Task 6). `Skill` interface + `skills: Skill[]` from `@/data/skills` (used by Task 7).
 
-- [ ] **Step 1: Create `data/projects.ts`**
+- [ ] **Step 1: Create `data/site.ts`**
+
+```ts
+export interface SiteInfo {
+  name: string;
+  role: string;
+  tagline: string;
+  bio: string;
+  email: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  cvUrl?: string;
+}
+
+export const site: SiteInfo = {
+  name: 'Your Name',
+  role: 'Software Developer',
+  tagline: 'Software developer building things for the web.',
+  bio: 'Placeholder bio. Replace this paragraph with a short description of your background, what you work on, and what you are looking for.',
+  email: 'you@example.com',
+  githubUrl: 'https://github.com/aleeks-code',
+  linkedinUrl: 'https://linkedin.com/in/your-profile',
+};
+```
+
+- [ ] **Step 2: Create `data/projects.ts`**
 
 ```ts
 export interface Project {
   title: string;
   description: string;
+  role?: string;
+  impact?: string;
   tags: string[];
   repoUrl?: string;
   liveUrl?: string;
@@ -349,6 +287,8 @@ export const projects: Project[] = [
     title: 'Project One',
     description:
       'Placeholder description of project one. Replace with a real project summary.',
+    role: 'Solo project',
+    impact: 'Replace with a concrete outcome, e.g. reduced load time by 40%.',
     tags: ['TypeScript', 'React'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-1.svg',
@@ -357,6 +297,8 @@ export const projects: Project[] = [
     title: 'Project Two',
     description:
       'Placeholder description of project two. Replace with a real project summary.',
+    role: 'Team project — led the frontend',
+    impact: 'Replace with a concrete outcome, e.g. shipped to 1,000+ users.',
     tags: ['Next.js', 'Tailwind CSS'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-2.svg',
@@ -365,6 +307,8 @@ export const projects: Project[] = [
     title: 'Project Three',
     description:
       'Placeholder description of project three. Replace with a real project summary.',
+    role: 'Solo project',
+    impact: 'Replace with a concrete outcome.',
     tags: ['Node.js', 'PostgreSQL'],
     repoUrl: 'https://github.com/aleeks-code',
     imageSrc: '/projects/placeholder-3.svg',
@@ -372,7 +316,7 @@ export const projects: Project[] = [
 ];
 ```
 
-- [ ] **Step 2: Create placeholder project images**
+- [ ] **Step 3: Create placeholder project images**
 
 Create `public/projects/placeholder-1.svg`, `public/projects/placeholder-2.svg`, `public/projects/placeholder-3.svg` — same content in all three:
 
@@ -383,7 +327,7 @@ Create `public/projects/placeholder-1.svg`, `public/projects/placeholder-2.svg`,
 </svg>
 ```
 
-- [ ] **Step 3: Create `data/skills.ts`**
+- [ ] **Step 4: Create `data/skills.ts`**
 
 ```ts
 export interface Skill {
@@ -404,16 +348,112 @@ export const skills: Skill[] = [
 ];
 ```
 
-- [ ] **Step 4: Verify**
+- [ ] **Step 5: Create `app/icon.svg` (favicon)**
 
-Run: `npm run typecheck`
-Expected: no type errors.
+Next's App Router auto-wires a file literally named `icon.svg` in `app/` as the site favicon — no metadata code needed. "YN" is a placeholder monogram; replace with real initials or a logo later.
 
-- [ ] **Step 5: Commit**
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#2563eb"/>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="700" fill="#ffffff">YN</text>
+</svg>
+```
+
+- [ ] **Step 6: Verify**
+
+Run: `npm run typecheck && npm run lint`
+Expected: both succeed with no errors.
+
+- [ ] **Step 7: Commit**
 
 ```bash
-git add data/ public/projects/
-git commit -m "feat: add placeholder content data for projects and skills"
+git add data/ public/projects/ app/icon.svg
+git commit -m "feat: add site-wide content data model and placeholder assets"
+```
+
+---
+
+### Task 3: Root Layout, Global Styles, Font, Metadata
+
+**Files:**
+- Modify: `app/layout.tsx`
+- Modify: `app/globals.css`
+
+**Interfaces:**
+- Consumes: `site` from `@/data/site` (Task 2)
+- Produces: final root layout with metadata (including Open Graph/Twitter tags), self-hosted `Inter` font wired through Tailwind's `font-sans` via `@theme`, light-theme base body styles. All later section components render inside this layout via `app/page.tsx`.
+
+- [ ] **Step 1: Update `app/globals.css`**
+
+```css
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+```
+
+- [ ] **Step 2: Update `app/layout.tsx`**
+
+```tsx
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { site } from '@/data/site';
+import './globals.css';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+
+const title = `${site.name} — ${site.role}`;
+const description = `Portfolio of ${site.name}, ${site.role.toLowerCase()}. Projects, skills, and contact.`;
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    type: 'website',
+    images: ['/og-image.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: ['/og-image.png'],
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className={inter.variable}>
+      <body className="bg-white text-gray-900 font-sans antialiased">
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+`/og-image.png` does not exist yet — that's expected. It's a real design asset (see spec's Open Items), not something this task creates; platforms without the image simply render a text-only preview.
+
+- [ ] **Step 3: Verify**
+
+Run: `npm run typecheck && npm run lint && npm run build`
+Expected: all three succeed with no errors.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add app/layout.tsx app/globals.css
+git commit -m "feat: add root layout, font, metadata, and base styles"
 ```
 
 ---
@@ -424,7 +464,7 @@ git commit -m "feat: add placeholder content data for projects and skills"
 - Create: `components/Nav.tsx`
 
 **Interfaces:**
-- Consumes: nothing
+- Consumes: `site` from `@/data/site` (Task 2)
 - Produces: `Nav` (default export, no props) — sticky header with anchor links to `#about`, `#projects`, `#skills`, `#contact`, and a mobile menu toggle. Used by Task 9's `app/page.tsx`.
 
 - [ ] **Step 1: Create `components/Nav.tsx`**
@@ -433,6 +473,7 @@ git commit -m "feat: add placeholder content data for projects and skills"
 'use client';
 
 import { useState } from 'react';
+import { site } from '@/data/site';
 
 const links = [
   { href: '#about', label: 'About' },
@@ -447,12 +488,15 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
       <nav className="mx-auto max-w-4xl flex items-center justify-between px-4 py-4">
-        <a href="#top" className="font-semibold text-gray-900">
-          Your Name
+        <a
+          href="#top"
+          className="font-semibold text-gray-900 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+        >
+          {site.name}
         </a>
         <button
           type="button"
-          className="sm:hidden text-gray-700"
+          className="sm:hidden text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
@@ -462,7 +506,10 @@ export default function Nav() {
         <ul className="hidden sm:flex gap-6">
           {links.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="text-gray-600 hover:text-blue-600">
+              <a
+                href={link.href}
+                className="text-gray-600 hover:text-blue-600 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+              >
                 {link.label}
               </a>
             </li>
@@ -475,7 +522,7 @@ export default function Nav() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="block text-gray-600 hover:text-blue-600"
+                className="block text-gray-600 hover:text-blue-600 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
@@ -510,25 +557,35 @@ git commit -m "feat: add Nav component with mobile menu"
 - Create: `components/About.tsx`
 
 **Interfaces:**
-- Consumes: nothing
+- Consumes: `site` from `@/data/site` (Task 2)
 - Produces: `Hero` (default export, no props, contains `id="top"`), `About` (default export, no props, contains `id="about"`). Used by Task 9's `app/page.tsx`.
 
 - [ ] **Step 1: Create `components/Hero.tsx`**
 
 ```tsx
+import { site } from '@/data/site';
+
 export default function Hero() {
   return (
-    <section id="top" className="mx-auto max-w-4xl px-4 py-24 text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold text-gray-900">Your Name</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        Software developer building things for the web.
-      </p>
-      <a
-        href="#projects"
-        className="mt-8 inline-block rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-      >
-        View my projects
-      </a>
+    <section id="top" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-24 text-center">
+      <h1 className="text-4xl sm:text-5xl font-bold text-gray-900">{site.name}</h1>
+      <p className="mt-4 text-lg text-gray-600">{site.tagline}</p>
+      <div className="mt-8 flex justify-center gap-4">
+        <a
+          href="#projects"
+          className="inline-block rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+        >
+          View my projects
+        </a>
+        {site.cvUrl && (
+          <a
+            href={site.cvUrl}
+            className="inline-block rounded-md border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          >
+            Download CV
+          </a>
+        )}
+      </div>
     </section>
   );
 }
@@ -537,14 +594,13 @@ export default function Hero() {
 - [ ] **Step 2: Create `components/About.tsx`**
 
 ```tsx
+import { site } from '@/data/site';
+
 export default function About() {
   return (
-    <section id="about" className="mx-auto max-w-4xl px-4 py-16">
+    <section id="about" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
       <h2 className="text-2xl font-semibold text-gray-900">About</h2>
-      <p className="mt-4 text-gray-600 leading-relaxed">
-        Placeholder bio. Replace this paragraph with a short description of your
-        background, what you work on, and what you are looking for.
-      </p>
+      <p className="mt-4 text-gray-600 leading-relaxed">{site.bio}</p>
     </section>
   );
 }
@@ -571,43 +627,57 @@ git commit -m "feat: add Hero and About components"
 - Create: `components/Projects.tsx`
 
 **Interfaces:**
-- Consumes: `Project` type and `projects` array from `@/data/projects` (Task 3)
+- Consumes: `Project` type and `projects` array from `@/data/projects` (Task 2)
 - Produces: `ProjectCard` (default export, props `{ project: Project }`), `Projects` (default export, no props, contains `id="projects"`, renders one `ProjectCard` per entry in `projects`). Used by Task 9's `app/page.tsx`.
 
 - [ ] **Step 1: Create `components/ProjectCard.tsx`**
 
 ```tsx
+import Image from 'next/image';
 import type { Project } from '@/data/projects';
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="rounded-lg border border-gray-200 overflow-hidden">
-      <img
+      <Image
         src={project.imageSrc}
         alt={`${project.title} preview`}
+        width={600}
+        height={400}
         className="w-full h-40 object-cover"
       />
       <div className="p-4">
         <h3 className="font-semibold text-gray-900">{project.title}</h3>
+        {project.role && (
+          <p className="mt-1 text-xs font-medium text-blue-600 uppercase tracking-wide">
+            {project.role}
+          </p>
+        )}
         <p className="mt-2 text-sm text-gray-600">{project.description}</p>
+        {project.impact && (
+          <p className="mt-2 text-sm text-gray-800 font-medium">{project.impact}</p>
+        )}
         <ul className="mt-3 flex flex-wrap gap-2">
           {project.tags.map((tag) => (
-            <li
-              key={tag}
-              className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1"
-            >
+            <li key={tag} className="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1">
               {tag}
             </li>
           ))}
         </ul>
         <div className="mt-4 flex gap-4 text-sm">
           {project.repoUrl && (
-            <a href={project.repoUrl} className="text-blue-600 hover:underline">
+            <a
+              href={project.repoUrl}
+              className="text-blue-600 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            >
               Code
             </a>
           )}
           {project.liveUrl && (
-            <a href={project.liveUrl} className="text-blue-600 hover:underline">
+            <a
+              href={project.liveUrl}
+              className="text-blue-600 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            >
               Live
             </a>
           )}
@@ -626,7 +696,7 @@ import ProjectCard from '@/components/ProjectCard';
 
 export default function Projects() {
   return (
-    <section id="projects" className="mx-auto max-w-4xl px-4 py-16">
+    <section id="projects" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
       <h2 className="text-2xl font-semibold text-gray-900">Projects</h2>
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         {projects.map((project) => (
@@ -640,8 +710,8 @@ export default function Projects() {
 
 - [ ] **Step 3: Verify**
 
-Run: `npm run typecheck && npm run lint`
-Expected: both succeed with no errors.
+Run: `npm run typecheck && npm run lint && npm run build`
+Expected: all three succeed — the build step in particular confirms `next/image` works correctly under `output: 'export'` with `images.unoptimized: true`.
 
 - [ ] **Step 4: Commit**
 
@@ -658,7 +728,7 @@ git commit -m "feat: add Projects section rendering project data"
 - Create: `components/Skills.tsx`
 
 **Interfaces:**
-- Consumes: `Skill` type and `skills` array from `@/data/skills` (Task 3)
+- Consumes: `Skill` type and `skills` array from `@/data/skills` (Task 2)
 - Produces: `Skills` (default export, no props, contains `id="skills"`). Used by Task 9's `app/page.tsx`.
 
 - [ ] **Step 1: Create `components/Skills.tsx`**
@@ -677,7 +747,7 @@ export default function Skills() {
   const categories = Array.from(new Set(skills.map((skill) => skill.category)));
 
   return (
-    <section id="skills" className="mx-auto max-w-4xl px-4 py-16">
+    <section id="skills" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
       <h2 className="text-2xl font-semibold text-gray-900">Skills</h2>
       <div className="mt-6 space-y-6">
         {categories.map((category) => (
@@ -729,8 +799,8 @@ git commit -m "feat: add Skills section rendering skill data"
 - Test: `components/Contact.test.tsx`
 
 **Interfaces:**
-- Consumes: `process.env.NEXT_PUBLIC_FORMSPREE_ID` (placeholder env var, real value supplied later — see spec Open Items)
-- Produces: `Contact` (default export, no props, contains `id="contact"`, submit state machine `idle | loading | success | error`). Used by Task 9's `app/page.tsx`.
+- Consumes: `site` from `@/data/site` (Task 2, for the `mailto:` fallback address); `process.env.NEXT_PUBLIC_FORMSPREE_ID` (placeholder env var, real value supplied later — see spec Open Items)
+- Produces: `Contact` (default export, no props, contains `id="contact"`, submit state machine `idle | loading | success | error | config-error`). Used by Task 9's `app/page.tsx`.
 
 - [ ] **Step 1: Add test tooling to `package.json`**
 
@@ -782,12 +852,16 @@ Expected: installs without errors.
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Contact from './Contact';
 
+const ORIGINAL_FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+
 describe('Contact', () => {
   beforeEach(() => {
+    process.env.NEXT_PUBLIC_FORMSPREE_ID = 'test-form-id';
     global.fetch = jest.fn();
   });
 
   afterEach(() => {
+    process.env.NEXT_PUBLIC_FORMSPREE_ID = ORIGINAL_FORMSPREE_ID;
     jest.restoreAllMocks();
   });
 
@@ -815,7 +889,7 @@ describe('Contact', () => {
     );
   });
 
-  it('shows an error message when the submission fails', async () => {
+  it('shows an error message when Formspree responds with a non-OK status', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
     render(<Contact />);
 
@@ -824,6 +898,49 @@ describe('Contact', () => {
     await waitFor(() =>
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
     );
+  });
+
+  it('shows an error message when the network request throws', async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('network down'));
+    render(<Contact />);
+
+    fillAndSubmit();
+
+    await waitFor(() =>
+      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+    );
+  });
+
+  it('shows a loading state while the request is pending', async () => {
+    let resolveFetch: (value: { ok: boolean }) => void = () => {};
+    (global.fetch as jest.Mock).mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      })
+    );
+    render(<Contact />);
+
+    fillAndSubmit();
+
+    expect(await screen.findByRole('button', { name: /sending/i })).toBeDisabled();
+
+    resolveFetch({ ok: true });
+
+    await waitFor(() =>
+      expect(screen.getByText(/thanks.*message/i)).toBeInTheDocument()
+    );
+  });
+
+  it('shows a configuration error and skips the network call when the form ID is missing', async () => {
+    delete process.env.NEXT_PUBLIC_FORMSPREE_ID;
+    render(<Contact />);
+
+    fillAndSubmit();
+
+    await waitFor(() =>
+      expect(screen.getByText(/isn.t configured yet/i)).toBeInTheDocument()
+    );
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
 ```
@@ -839,25 +956,47 @@ Expected: FAIL — `Cannot find module './Contact'` (component does not exist ye
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { site } from '@/data/site';
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
+type Status = 'idle' | 'loading' | 'success' | 'error' | 'config-error';
 
 export default function Contact() {
   const [status, setStatus] = useState<Status>('idle');
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus('loading');
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-    const form = event.currentTarget;
-    const data = new FormData(form);
+    if (!formId) {
+      setStatus('config-error');
+      return;
+    }
+
+    if (formData.get('_gotcha')) {
+      // Honeypot filled in by a bot — pretend success, send nothing.
+      setStatus('success');
+      form.reset();
+      return;
+    }
+
+    setStatus('loading');
+
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+    };
 
     try {
       const response = await fetch(`https://formspree.io/f/${formId}`, {
         method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -872,9 +1011,13 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="mx-auto max-w-4xl px-4 py-16">
+    <section id="contact" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
       <h2 className="text-2xl font-semibold text-gray-900">Contact</h2>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4 max-w-md">
+        <div className="hidden" aria-hidden="true">
+          <label htmlFor="_gotcha">Leave this field empty</label>
+          <input id="_gotcha" name="_gotcha" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name
@@ -884,7 +1027,7 @@ export default function Contact() {
             name="name"
             type="text"
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <div>
@@ -896,7 +1039,7 @@ export default function Contact() {
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <div>
@@ -908,27 +1051,44 @@ export default function Contact() {
             name="message"
             required
             rows={4}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
         >
           {status === 'loading' ? 'Sending...' : 'Send'}
         </button>
-        {status === 'success' && (
-          <p className="text-green-600">
-            Thanks for your message! I will get back to you soon.
-          </p>
-        )}
-        {status === 'error' && (
-          <p className="text-red-600">
-            Something went wrong. Please try again or email me directly.
-          </p>
-        )}
+        <div aria-live="polite">
+          {status === 'success' && (
+            <p className="text-green-600">
+              Thanks for your message! I will get back to you soon.
+            </p>
+          )}
+          {status === 'error' && (
+            <p className="text-red-600">
+              Something went wrong. Please try again or email me directly below.
+            </p>
+          )}
+          {status === 'config-error' && (
+            <p className="text-red-600">
+              The contact form isn&apos;t configured yet. Please email me directly below.
+            </p>
+          )}
+        </div>
       </form>
+      <p className="mt-4 text-sm text-gray-600">
+        You can also reach me directly at{' '}
+        <a
+          href={`mailto:${site.email}`}
+          className="text-blue-600 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+        >
+          {site.email}
+        </a>
+        .
+      </p>
     </section>
   );
 }
@@ -937,12 +1097,12 @@ export default function Contact() {
 - [ ] **Step 8: Run test, verify it passes**
 
 Run: `npm test -- Contact.test.tsx`
-Expected: PASS — both tests green.
+Expected: PASS — all five tests green.
 
 - [ ] **Step 9: Verify the rest of the project still builds**
 
-Run: `npm run typecheck && npm run build`
-Expected: both succeed with no errors.
+Run: `npm run typecheck && npm run lint && npm run build`
+Expected: all three succeed with no errors.
 
 - [ ] **Step 10: Commit**
 
@@ -960,26 +1120,33 @@ git commit -m "feat: add Contact form with tested submit state machine"
 - Modify: `app/page.tsx`
 
 **Interfaces:**
-- Consumes: `Nav` (Task 4), `Hero`/`About` (Task 5), `Projects` (Task 6), `Skills` (Task 7), `Contact` (Task 8)
+- Consumes: `site` from `@/data/site` (Task 2); `Nav` (Task 4); `Hero`/`About` (Task 5); `Projects` (Task 6); `Skills` (Task 7); `Contact` (Task 8)
 - Produces: final `app/page.tsx` composing every section in order; `Footer` (default export, no props).
 
 - [ ] **Step 1: Create `components/Footer.tsx`**
 
 ```tsx
+import { site } from '@/data/site';
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-gray-200 py-8">
       <div className="mx-auto max-w-4xl px-4 flex flex-col sm:flex-row justify-between gap-4 text-sm text-gray-500">
-        <p>&copy; {year} Your Name. All rights reserved.</p>
+        <p>
+          &copy; {year} {site.name}. All rights reserved.
+        </p>
         <div className="flex gap-4">
-          <a href="https://github.com/aleeks-code" className="hover:text-gray-700">
+          <a
+            href={site.githubUrl}
+            className="hover:text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          >
             GitHub
           </a>
           <a
-            href="https://linkedin.com/in/your-profile"
-            className="hover:text-gray-700"
+            href={site.linkedinUrl}
+            className="hover:text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           >
             LinkedIn
           </a>
@@ -1020,13 +1187,13 @@ export default function Home() {
 
 - [ ] **Step 3: Verify**
 
-Run: `npm run typecheck && npm test && npm run build`
-Expected: all three succeed — type check clean, Contact tests pass, static export builds.
+Run: `npm run typecheck && npm run lint && npm test && npm run build`
+Expected: all four succeed — type check clean, lint clean, Contact tests pass, static export builds.
 
 - [ ] **Step 4: Manual check**
 
 Run: `npm run dev`, open `http://localhost:3000`.
-Expected: page shows Nav, Hero, About, Projects (3 placeholder cards), Skills (grouped badges), Contact form, Footer, in that order; anchor links scroll to the right section; mobile width (<640px) collapses Nav into the Menu toggle.
+Expected: page shows Nav, Hero, About, Projects (3 placeholder cards with role/impact lines), Skills (grouped badges), Contact form with mailto fallback, Footer, in that order; anchor links scroll to the right section without the heading hiding under the sticky nav; tabbing through the page shows a visible focus ring on every link/button/field; mobile width (<640px) collapses Nav into the Menu toggle.
 
 - [ ] **Step 5: Commit**
 
@@ -1037,7 +1204,7 @@ git commit -m "feat: assemble full portfolio page with all sections"
 
 ---
 
-### Task 10: GitHub Actions Deployment
+### Task 10: GitHub Actions CI and Deployment
 
 **Files:**
 - Create: `.github/workflows/deploy.yml`
@@ -1045,8 +1212,8 @@ git commit -m "feat: assemble full portfolio page with all sections"
 - Create: `README.md`
 
 **Interfaces:**
-- Consumes: `npm run build` (Task 1), `NEXT_PUBLIC_FORMSPREE_ID` env var (Task 8)
-- Produces: CI workflow that builds and publishes `out/` to GitHub Pages on push to `main`.
+- Consumes: `npm run lint` / `npm run typecheck` / `npm test` / `npm run build` (Tasks 1–9); `NEXT_PUBLIC_FORMSPREE_ID` env var (Task 8)
+- Produces: CI workflow that validates every push and pull request, and publishes `out/` to GitHub Pages only on push to `main`.
 
 - [ ] **Step 1: Rename the local branch to `main`**
 
@@ -1056,11 +1223,12 @@ Expected: `git branch` shows `* main`.
 - [ ] **Step 2: Create `.github/workflows/deploy.yml`**
 
 ```yaml
-name: Deploy to GitHub Pages
+name: Build, Test, and Deploy
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -1082,27 +1250,39 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_FORMSPREE_ID: ${{ secrets.NEXT_PUBLIC_FORMSPREE_ID }}
+          NEXT_PUBLIC_FORMSPREE_ID: ${{ vars.NEXT_PUBLIC_FORMSPREE_ID }}
 
       - name: Setup Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
   deploy:
     needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -1135,9 +1315,11 @@ npm run dev
 
 Open http://localhost:3000.
 
-## Testing
+## Checks
 
 \`\`\`bash
+npm run lint
+npm run typecheck
 npm test
 \`\`\`
 
@@ -1147,12 +1329,19 @@ npm test
 npm run build
 \`\`\`
 
-Static output is written to `out/`.
+Static output is written to `out/`. To preview the static build locally:
+
+\`\`\`bash
+npm run serve
+\`\`\`
+
+(`next start` does not work here — the site is a static export, not a running Next.js server.)
 
 ## Deployment
 
-Pushes to `main` trigger `.github/workflows/deploy.yml`, which builds and
-publishes to GitHub Pages automatically.
+Pushes to `main` and pull requests both run lint/typecheck/test/build via
+`.github/workflows/deploy.yml`. Only a push to `main` actually deploys —
+pull requests get full validation without publishing anything.
 
 One-time setup required before the first deploy works:
 
@@ -1160,29 +1349,37 @@ One-time setup required before the first deploy works:
    this project to it (`git remote add origin <url>`, `git push -u origin main`).
 2. In the repository's Settings → Pages, set **Source** to **GitHub Actions**.
 3. Sign up at https://formspree.io, create a form, and copy its form ID.
-4. Add that ID as a repository secret named `NEXT_PUBLIC_FORMSPREE_ID`
-   (Settings → Secrets and variables → Actions → New repository secret), and
-   also create a local `.env.local` (copy `.env.local.example`) for local dev.
+4. Add that ID as a repository **variable** (not a secret — it ends up in
+   public client-side JS either way) named `NEXT_PUBLIC_FORMSPREE_ID`
+   (Settings → Secrets and variables → Actions → **Variables** tab → New
+   repository variable), and also create a local `.env.local` (copy
+   `.env.local.example`) for local dev.
 5. Push to `main` — the site publishes to `https://aleeks-code.github.io`.
 
 ## Content
 
 Update placeholder content in:
-- `data/projects.ts`
+- `data/site.ts` (name, role, bio, email, social links, optional CV link)
+- `data/projects.ts` (include real screenshots in `public/projects/`, and a
+  concrete `role`/`impact` per project — a project without a stated outcome
+  reads as generic)
 - `data/skills.ts`
-- `components/About.tsx` (bio)
-- `components/Footer.tsx` (social links)
-- `components/Hero.tsx` / `app/layout.tsx` (display name)
+- `app/icon.svg` (placeholder favicon — swap for real initials or a logo)
+
+Still open, not code-buildable by this project:
+- A real Open Graph preview image at `public/og-image.png` (already
+  referenced in `app/layout.tsx` metadata — just needs the actual file).
+- A real CV file, then set `site.cvUrl` to it.
 ```
 
 - [ ] **Step 5: Verify**
 
-Run: `npm run typecheck && npm test && npm run build`
-Expected: all three succeed.
+Run: `npm run lint && npm run typecheck && npm test && npm run build`
+Expected: all four succeed.
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add .github/workflows/deploy.yml .env.local.example README.md
-git commit -m "chore: add GitHub Pages deploy workflow and setup docs"
+git commit -m "chore: add GitHub Pages CI/deploy workflow and setup docs"
 ```
