@@ -12,13 +12,13 @@ export default function Footer() {
         <div className="flex gap-4">
           <a
             href={site.githubUrl}
-            className="hover:text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="hover:text-gray-700 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           >
             GitHub
           </a>
           <a
             href={site.linkedinUrl}
-            className="hover:text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="hover:text-gray-700 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           >
             LinkedIn
           </a>

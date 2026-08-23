@@ -18,13 +18,13 @@ export default function Nav() {
       <nav className="mx-auto max-w-4xl flex items-center justify-between px-4 py-4">
         <a
           href="#top"
-          className="font-semibold text-gray-900 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          className="font-semibold text-gray-900 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
         >
           {site.name}
         </a>
         <button
           type="button"
-          className="sm:hidden text-gray-700 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          className="sm:hidden text-gray-700 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
@@ -36,7 +36,7 @@ export default function Nav() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-gray-600 hover:text-blue-600 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                className="text-gray-600 hover:text-blue-600 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
               >
                 {link.label}
               </a>
@@ -50,7 +50,7 @@ export default function Nav() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="block text-gray-600 hover:text-blue-600 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                className="block text-gray-600 hover:text-blue-600 rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
                 onClick={() => setOpen(false)}
               >
                 {link.label}

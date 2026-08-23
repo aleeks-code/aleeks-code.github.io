@@ -72,7 +72,7 @@ export default function Contact() {
             name="name"
             type="text"
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <div>
@@ -84,7 +84,7 @@ export default function Contact() {
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <div>
@@ -96,13 +96,13 @@ export default function Contact() {
             name="message"
             required
             rows={4}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
           />
         </div>
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
         >
           {status === 'loading' ? 'Sending...' : 'Send'}
         </button>
@@ -128,7 +128,7 @@ export default function Contact() {
         You can also reach me directly at{' '}
         <a
           href={`mailto:${site.email}`}
-          className="text-blue-600 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
         >
           {site.email}
         </a>

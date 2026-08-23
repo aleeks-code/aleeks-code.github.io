@@ -8,14 +8,14 @@ export default function Hero() {
       <div className="mt-8 flex justify-center gap-4">
         <a
           href="#projects"
-          className="inline-block rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          className="inline-block rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
         >
           View my projects
         </a>
         {site.cvUrl && (
           <a
             href={site.cvUrl}
-            className="inline-block rounded-md border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+            className="inline-block rounded-md border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
           >
             Download CV
           </a>
