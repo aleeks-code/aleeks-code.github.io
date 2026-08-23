@@ -1,3 +1,5 @@
+import Reveal from '@/components/Reveal';
+
 const services = [
   {
     title: 'Siti Vetrina',
@@ -24,16 +26,15 @@ export default function Services() {
       </h2>
       <div className="mt-8 grid gap-6 sm:grid-cols-3">
         {services.map((service, index) => (
-          <div
-            key={service.title}
-            className="rounded-lg border border-slate-200 p-6 transition-shadow duration-200 hover:shadow-lg"
-          >
-            <span className="font-mono text-sm text-brand">0{index + 1}</span>
-            <h3 className="mt-2 font-display text-lg font-semibold text-navy">
-              {service.title}
-            </h3>
-            <p className="mt-2 text-sm text-slate-600 leading-relaxed">{service.description}</p>
-          </div>
+          <Reveal key={service.title}>
+            <div className="rounded-lg border border-slate-200 p-6 transition-shadow duration-200 hover:shadow-lg">
+              <span className="font-mono text-sm text-brand">0{index + 1}</span>
+              <h3 className="mt-2 font-display text-lg font-semibold text-navy">
+                {service.title}
+              </h3>
+              <p className="mt-2 text-sm text-slate-600 leading-relaxed">{service.description}</p>
+            </div>
+          </Reveal>
         ))}
       </div>
     </section>

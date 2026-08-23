@@ -6,38 +6,42 @@ export interface Project {
   tags: string[];
   repoUrl?: string;
   liveUrl?: string;
-  imageSrc: string;
+  accentFrom: string;
+  accentTo: string;
 }
 
 export const projects: Project[] = [
   {
-    title: 'Progetto Uno',
+    title: 'Bella Napoli',
     description:
-      'Descrizione segnaposto del primo progetto. Da sostituire con un caso reale.',
-    role: 'Progetto personale',
-    impact: 'Sostituisci con un risultato concreto, es. tempo di caricamento ridotto del 40%.',
-    tags: ['TypeScript', 'React'],
-    repoUrl: 'https://github.com/aleeks-code',
-    imageSrc: '/projects/placeholder-1.svg',
-  },
-  {
-    title: 'Progetto Due',
-    description:
-      'Descrizione segnaposto del secondo progetto. Da sostituire con un caso reale.',
-    role: 'Progetto di gruppo — frontend',
-    impact: 'Sostituisci con un risultato concreto, es. oltre 1.000 utenti raggiunti.',
+      'Sito vetrina per un ristorante italiano: menu, prenotazioni e orari sempre aggiornati. Progetto dimostrativo.',
+    role: 'Progetto demo',
+    impact: 'Pensato per convertire chi cerca "ristorante vicino a me" in una prenotazione.',
     tags: ['Next.js', 'Tailwind CSS'],
-    repoUrl: 'https://github.com/aleeks-code',
-    imageSrc: '/projects/placeholder-2.svg',
+    liveUrl: '/demo/ristorante',
+    accentFrom: '#8b3a2b',
+    accentTo: '#c9a227',
   },
   {
-    title: 'Progetto Tre',
+    title: 'FitZone',
     description:
-      'Descrizione segnaposto del terzo progetto. Da sostituire con un caso reale.',
-    role: 'Progetto personale',
-    impact: 'Sostituisci con un risultato concreto.',
-    tags: ['Node.js', 'PostgreSQL'],
-    repoUrl: 'https://github.com/aleeks-code',
-    imageSrc: '/projects/placeholder-3.svg',
+      'Landing page per una palestra: corsi, orari e call-to-action per la prova gratuita. Progetto dimostrativo.',
+    role: 'Progetto demo',
+    impact: 'Stile energico pensato per convertire i visitatori in nuovi iscritti.',
+    tags: ['Next.js', 'Tailwind CSS'],
+    liveUrl: '/demo/palestra',
+    accentFrom: '#0a0a0a',
+    accentTo: '#2e2e2e',
+  },
+  {
+    title: 'Studio Rossi & Associati',
+    description:
+      'Sito vetrina per uno studio professionale: aree di competenza e contatti diretti. Progetto dimostrativo.',
+    role: 'Progetto demo',
+    impact: 'Immagine sobria e affidabile per un’attività di consulenza.',
+    tags: ['Next.js', 'Tailwind CSS'],
+    liveUrl: '/demo/studio',
+    accentFrom: '#0f1b33',
+    accentTo: '#b08d3d',
   },
 ];

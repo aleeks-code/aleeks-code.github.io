@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { site } from '@/data/site';
+import Reveal from '@/components/Reveal';
 
 type Status = 'idle' | 'loading' | 'success' | 'error' | 'config-error';
 
@@ -57,6 +58,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
+      <Reveal>
       <h2 className="font-mono text-2xl font-semibold text-navy">
         <span className="text-brand">{'// '}</span>Contatti
       </h2>
@@ -136,6 +138,7 @@ export default function Contact() {
         </a>
         .
       </p>
+      </Reveal>
     </section>
   );
 }

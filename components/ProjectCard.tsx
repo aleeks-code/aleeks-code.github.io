@@ -1,16 +1,17 @@
-import Image from 'next/image';
 import type { Project } from '@/data/projects';
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="rounded-lg border border-slate-200 overflow-hidden transition-shadow duration-200 hover:shadow-lg">
-      <Image
-        src={project.imageSrc}
-        alt={`${project.title} preview`}
-        width={600}
-        height={400}
-        className="w-full h-40 object-cover"
-      />
+      <div
+        aria-hidden="true"
+        className="flex h-40 w-full items-center justify-center px-4 text-center"
+        style={{
+          background: `linear-gradient(135deg, ${project.accentFrom}, ${project.accentTo})`,
+        }}
+      >
+        <span className="font-display text-2xl font-bold text-white/90">{project.title}</span>
+      </div>
       <div className="p-4">
         <h3 className="font-display font-semibold text-navy">{project.title}</h3>
         {project.role && (

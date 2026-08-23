@@ -1,5 +1,6 @@
 import { projects } from '@/data/projects';
 import ProjectCard from '@/components/ProjectCard';
+import Reveal from '@/components/Reveal';
 
 export default function Projects() {
   return (
@@ -8,8 +9,10 @@ export default function Projects() {
         <span className="text-brand">{'// '}</span>Progetti
       </h2>
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard key={project.title} project={project} />
+        {projects.map((project, index) => (
+          <Reveal key={project.title} className={index === 0 ? 'sm:col-span-2' : undefined}>
+            <ProjectCard project={project} />
+          </Reveal>
         ))}
       </div>
     </section>
