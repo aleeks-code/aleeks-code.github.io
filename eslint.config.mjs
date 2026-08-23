@@ -1,9 +1,6 @@
-import js from '@eslint/js';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
 
-/** ponytail: basic flat config avoiding circular ref bug in eslint-config-next v16 + eslint 9 */
-export default [
-  js.configs.recommended,
-  {
-    ignores: ['node_modules', '.next', 'out', '.git'],
-  },
-];
+const eslintConfig = [...nextCoreWebVitals, ...nextTypescript];
+
+export default eslintConfig;
