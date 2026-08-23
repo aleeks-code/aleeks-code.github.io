@@ -9,6 +9,7 @@ const title = `${site.name} — ${site.role}`;
 const description = `Portfolio of ${site.name}, ${site.role.toLowerCase()}. Projects, skills, and contact.`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://aleeks-code.github.io'),
   title,
   description,
   openGraph: {
