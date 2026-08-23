@@ -12,9 +12,9 @@ export default function ProjectCard({ project }: { project: Project }) {
         className="w-full h-40 object-cover"
       />
       <div className="p-4">
-        <h3 className="font-semibold text-slate-900">{project.title}</h3>
+        <h3 className="font-display font-semibold text-navy">{project.title}</h3>
         {project.role && (
-          <p className="mt-1 font-mono text-xs font-medium text-blue-600 uppercase tracking-wide">
+          <p className="mt-1 font-mono text-xs font-medium text-brand uppercase tracking-wide">
             {project.role}
           </p>
         )}
@@ -36,7 +36,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           {project.repoUrl && (
             <a
               href={project.repoUrl}
-              className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+              className="text-brand hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
             >
               Codice
             </a>
@@ -44,7 +44,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           {project.liveUrl && (
             <a
               href={project.liveUrl}
-              className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+              className="text-brand hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
             >
               Demo
             </a>

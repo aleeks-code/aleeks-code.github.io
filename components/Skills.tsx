@@ -13,8 +13,8 @@ export default function Skills() {
   return (
     <section id="skills" className="scroll-mt-20 bg-slate-50">
       <div className="mx-auto max-w-4xl px-4 py-16">
-        <h2 className="font-mono text-2xl font-semibold text-slate-900">
-          <span className="text-blue-600">{'// '}</span>Competenze
+        <h2 className="font-mono text-2xl font-semibold text-navy">
+          <span className="text-brand">{'// '}</span>Competenze
         </h2>
         <div className="mt-6 space-y-6">
           {categories.map((category) => (
@@ -28,7 +28,7 @@ export default function Skills() {
                   .map((skill) => (
                     <li
                       key={skill.name}
-                      className="text-sm bg-white text-slate-800 border border-slate-200 rounded-full px-3 py-1 transition-colors duration-200 hover:border-blue-600"
+                      className="text-sm bg-white text-slate-800 border border-slate-200 rounded-full px-3 py-1 transition-colors duration-200 hover:border-brand"
                     >
                       {skill.name}
                     </li>

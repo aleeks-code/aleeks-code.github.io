@@ -57,8 +57,8 @@ export default function Contact() {
 
   return (
     <section id="contact" className="scroll-mt-20 mx-auto max-w-4xl px-4 py-16">
-      <h2 className="font-mono text-2xl font-semibold text-slate-900">
-        <span className="text-blue-600">{'// '}</span>Contatti
+      <h2 className="font-mono text-2xl font-semibold text-navy">
+        <span className="text-brand">{'// '}</span>Contatti
       </h2>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4 max-w-md">
         <div className="hidden" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function Contact() {
             name="name"
             type="text"
             required
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
           />
         </div>
         <div>
@@ -86,7 +86,7 @@ export default function Contact() {
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
           />
         </div>
         <div>
@@ -98,13 +98,13 @@ export default function Contact() {
             name="message"
             required
             rows={4}
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
           />
         </div>
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="rounded-md bg-blue-600 px-6 py-3 text-white transition-colors duration-200 hover:bg-blue-700 disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          className="rounded-md bg-brand px-6 py-3 text-white transition-colors duration-200 hover:bg-brand-dark disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
         >
           {status === 'loading' ? 'Invio...' : 'Invia'}
         </button>
@@ -130,7 +130,7 @@ export default function Contact() {
         Puoi anche scrivermi direttamente a{' '}
         <a
           href={`mailto:${site.email}`}
-          className="text-blue-600 hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600"
+          className="text-brand hover:underline rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
         >
           {site.email}
         </a>
