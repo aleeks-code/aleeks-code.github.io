@@ -184,13 +184,23 @@ export default function Projects() {
               }}
             >
               {view === 'desktop' ? (
-                <Image
-                  src={project.imageDesktop}
-                  alt={`${project.title} — schermata desktop`}
-                  fill
-                  sizes="60vw"
-                  className="object-cover"
-                />
+                <>
+                  <Image
+                    src={project.imageDesktop}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="60vw"
+                    className="scale-110 object-cover opacity-40 blur-2xl"
+                  />
+                  <Image
+                    src={project.imageDesktop}
+                    alt={`${project.title} — schermata desktop`}
+                    fill
+                    sizes="60vw"
+                    className="object-contain"
+                  />
+                </>
               ) : (
                 <div className="relative h-[min(62vh,600px)] w-[300px] overflow-hidden border border-navy">
                   <Image
@@ -292,36 +302,22 @@ export default function Projects() {
           ))}
         </div>
 
-        <div className="relative mt-5 h-[300px] overflow-hidden bg-cream-dark">
+        <div className="relative mt-5 h-[440px] overflow-hidden bg-cream-dark">
           <Image
-            src={view === 'desktop' ? activeProject.imageDesktop : activeProject.imageMobile}
-            alt={`${activeProject.title} — schermata ${view === 'desktop' ? 'desktop' : 'mobile'}`}
+            src={activeProject.imageMobile}
+            alt=""
+            aria-hidden="true"
             fill
             sizes="100vw"
-            className="object-cover"
+            className="scale-110 object-cover opacity-40 blur-2xl"
           />
-          <div
-            role="group"
-            aria-label="Formato dell’anteprima"
-            className="absolute top-3 right-3 z-3 flex border border-navy bg-cream/95"
-          >
-            <button
-              type="button"
-              onClick={() => setView('desktop')}
-              aria-pressed={view === 'desktop'}
-              className={viewBtnClass(view === 'desktop')}
-            >
-              Desktop
-            </button>
-            <button
-              type="button"
-              onClick={() => setView('mobile')}
-              aria-pressed={view === 'mobile'}
-              className={viewBtnClass(view === 'mobile')}
-            >
-              Mobile
-            </button>
-          </div>
+          <Image
+            src={activeProject.imageMobile}
+            alt={`${activeProject.title} — schermata mobile`}
+            fill
+            sizes="100vw"
+            className="object-contain"
+          />
         </div>
 
         <div className="mt-5">
