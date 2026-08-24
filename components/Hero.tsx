@@ -36,28 +36,28 @@ export default function Hero() {
           {/* decorative browser-window mockup — anchored above this column, never overlaps it regardless of viewport height */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute right-0 bottom-full mb-5 hidden w-[220px] -rotate-3 border border-navy/15 bg-cream-dark shadow-[0_24px_60px_-28px_rgba(10,20,40,0.4)] md:block lg:mb-6 lg:w-[260px]"
+            className="pointer-events-none absolute inset-x-0 bottom-full mb-5 hidden border border-navy/15 bg-cream-dark shadow-[0_24px_60px_-28px_rgba(10,20,40,0.4)] md:block lg:mb-6"
           >
-            <div className="flex items-center gap-1.5 border-b border-navy/15 bg-cream-darker px-3 py-2">
+            <div className="flex items-center gap-1.5 border-b border-navy/15 bg-cream-darker px-3.5 py-2.5">
               <span className="h-2 w-2 rounded-full bg-coral" />
               <span className="h-2 w-2 rounded-full bg-brand/55" />
               <span className="h-2 w-2 rounded-full bg-navy/25" />
             </div>
-            <div className="space-y-2 p-3">
+            <div className="space-y-2.5 p-4">
               <div className="flex items-center justify-between">
-                <span className="h-1.5 w-8 rounded-full bg-navy/30" />
+                <span className="h-1.5 w-10 rounded-full bg-navy/30" />
                 <div className="flex gap-1">
-                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
-                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
-                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
+                  <span className="h-1.5 w-6 rounded-full bg-navy/15" />
+                  <span className="h-1.5 w-6 rounded-full bg-navy/15" />
+                  <span className="h-1.5 w-6 rounded-full bg-navy/15" />
                 </div>
               </div>
-              <div className="h-12 rounded-sm bg-brand/12" />
+              <div className="h-14 rounded-sm bg-brand/12" />
               <div className="space-y-1">
                 <span className="block h-1.5 w-full rounded-full bg-navy/12" />
                 <span className="block h-1.5 w-4/5 rounded-full bg-navy/12" />
               </div>
-              <span className="inline-block h-4 w-14 rounded-full bg-coral" />
+              <span className="inline-block h-4 w-16 rounded-full bg-coral" />
             </div>
           </div>
           <p className="mt-4 text-[16.5px] leading-relaxed text-ink">{site.tagline}</p>
@@ -83,6 +83,15 @@ export default function Hero() {
           </div>
           <div className="text-[clamp(26px,2.6vw,36px)] leading-[1.06] font-semibold tracking-[-0.025em] text-brand">
             {site.heroLine2}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-5 border-t border-navy/15 pt-6 md:mt-14">
+            {site.heroStats.map((stat) => (
+              <div key={stat.label} className="max-w-[15ch]">
+                <div className="text-2xl font-semibold tabular-nums text-navy">{stat.value}</div>
+                <div className="mt-1 text-[13px] leading-snug text-ink/70">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

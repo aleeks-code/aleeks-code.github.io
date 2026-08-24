@@ -5,6 +5,7 @@ export interface SiteInfo {
   heroTitleAccent: string;
   heroLine1: string;
   heroLine2: string;
+  heroStats: { value: string; label: string }[];
   tagline: string;
   bio: string;
   aboutHeading: string;
@@ -28,6 +29,11 @@ export const site: SiteInfo = {
   heroTitleAccent: 'reali.',
   heroLine1: 'Chiari da usare.',
   heroLine2: 'Difficili da ignorare.',
+  heroStats: [
+    { value: '03', label: 'Progetti demo pubblicati' },
+    { value: '100%', label: 'Mobile-first, sempre responsive' },
+    { value: '24h', label: 'Tempo di risposta medio' },
+  ],
   tagline:
     'Sono Alex Munafò, web developer a Mantova. Realizzo siti vetrina e landing page pensati per presentare meglio un’attività e trasformare le visite in contatti.',
   bio: 'Sono Alex Munafò, web developer a Mantova. Realizzo siti vetrina e landing page per attività e professionisti che vogliono presentarsi meglio online. Lavoro con attenzione alla chiarezza, alle prestazioni e alla semplicità di gestione.',
