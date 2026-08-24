@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { site } from '@/data/site';
 
 const links = [
@@ -43,9 +44,12 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-30 border-b border-navy bg-cream">
       <div className="mx-auto flex h-[84px] max-w-[1240px] items-center justify-between gap-8 px-6 sm:px-8 lg:px-14">
-        <a href="#top" className="flex flex-shrink-0 items-baseline gap-3">
-          <span className="text-[22px] font-semibold tracking-tight">{site.name}</span>
-          <span className="hidden text-[15px] text-ink sm:inline">{site.role}</span>
+        <a href="#top" className="flex flex-shrink-0 items-center gap-3">
+          <Image src="/am-mark.png" alt="" aria-hidden="true" width={34} height={34} className="h-[30px] w-[30px]" />
+          <span className="flex items-baseline gap-3">
+            <span className="text-[22px] font-semibold tracking-tight">{site.name}</span>
+            <span className="hidden text-[15px] text-ink sm:inline">{site.role}</span>
+          </span>
         </a>
 
         <nav className="hidden items-center gap-5 md:flex lg:gap-8">
@@ -53,7 +57,7 @@ export default function Nav() {
             <a
               key={link.href}
               href={link.href}
-              className="border-b-2 pb-[3px] text-[15px] tracking-[0.01em] text-navy transition-colors duration-200"
+              className="border-b-2 pb-[3px] text-[15px] tracking-[0.01em] text-navy transition-colors duration-200 hover:text-brand"
               style={{ borderBottomColor: isActive(link.id) ? '#2B4BF2' : 'transparent' }}
             >
               {link.label}
@@ -61,7 +65,7 @@ export default function Nav() {
           ))}
           <a
             href="#contatti"
-            className="border border-navy px-[17px] py-[10px] text-[14.5px] transition-colors duration-200 hover:bg-navy hover:text-cream"
+            className="bg-brand px-[17px] py-[10px] text-[14.5px] font-semibold text-white transition-colors duration-200 hover:bg-brand-dark"
           >
             Parliamone
           </a>
