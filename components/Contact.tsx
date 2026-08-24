@@ -215,7 +215,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSending}
-                className="min-h-13 border-0 px-6.5 py-4.5 font-[inherit] text-[17px] font-semibold text-white transition-colors duration-200 disabled:opacity-80"
+                className="min-h-13 border-0 px-6.5 py-4.5 font-[inherit] text-[17px] font-semibold text-white transition-[filter] duration-200 enabled:hover:brightness-110 disabled:opacity-80"
                 style={{
                   background: isSending ? '#1B39D6' : '#2B4BF2',
                   cursor: isSending ? 'progress' : 'pointer',

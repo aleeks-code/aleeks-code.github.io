@@ -28,7 +28,7 @@ export default function Services() {
                   type="button"
                   onClick={() => setOpen(isOpen ? null : index)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center gap-4 py-4.5 text-left transition-transform duration-300 sm:items-start sm:gap-8 sm:py-7"
+                  className="flex w-full items-center gap-4 py-4.5 text-left transition-[transform,background-color] duration-300 hover:bg-cream-dark/60 sm:items-start sm:gap-8 sm:py-7"
                   style={{ transform: isOpen ? 'translateX(8px)' : 'none' }}
                 >
                   <span

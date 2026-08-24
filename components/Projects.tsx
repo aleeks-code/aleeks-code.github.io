@@ -8,7 +8,7 @@ type View = 'desktop' | 'mobile';
 
 function viewBtnClass(isActive: boolean) {
   return `min-h-11 min-w-11 px-4 py-3 text-sm font-semibold tracking-[0.06em] uppercase transition-colors duration-200 ${
-    isActive ? 'bg-navy text-cream' : 'bg-transparent text-navy'
+    isActive ? 'bg-navy text-cream' : 'bg-transparent text-navy hover:bg-navy/10'
   }`;
 }
 
@@ -83,7 +83,7 @@ export default function Projects() {
                     type="button"
                     onClick={() => setActive(i)}
                     aria-current={isActive}
-                    className="flex w-full items-baseline gap-4 border-b border-white/16 py-3 pl-4 text-left transition-[box-shadow,opacity] duration-300"
+                    className="flex w-full items-baseline gap-4 border-b border-white/16 py-3 pl-4 text-left transition-[box-shadow,opacity,background-color] duration-300 hover:bg-white/5"
                     style={{
                       boxShadow: `inset 3px 0 0 ${isActive ? '#2B4BF2' : 'rgba(255,255,255,0)'}`,
                       opacity: isActive ? 1 : 0.55,
@@ -284,7 +284,7 @@ export default function Projects() {
               className={`min-h-11 flex-1 border px-2 py-2.5 text-[13.5px] font-semibold transition-colors duration-200 ${
                 active === i
                   ? 'border-white bg-white text-navy'
-                  : 'border-white/30 bg-transparent text-white/75'
+                  : 'border-white/30 bg-transparent text-white/75 hover:border-white/60 hover:text-white'
               }`}
             >
               {project.title}
@@ -352,7 +352,7 @@ export default function Projects() {
         {activeProject.liveUrl && (
           <a
             href={activeProject.liveUrl}
-            className="mt-5 block min-h-13 box-border p-4 text-center text-base font-semibold text-navy bg-white"
+            className="mt-5 block min-h-13 box-border p-4 text-center text-base font-semibold text-navy bg-white transition-colors duration-200 hover:bg-brand hover:text-white"
           >
             Vedi progetto
           </a>
