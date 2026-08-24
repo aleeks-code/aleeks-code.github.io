@@ -2,8 +2,11 @@ import { site } from '@/data/site';
 
 export default function Hero() {
   return (
-    <section id="top" className="scroll-mt-20 bg-cream">
-      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 px-6 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20 md:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.95fr)] md:gap-x-16 lg:px-14">
+    <section
+      id="top"
+      className="scroll-mt-20 bg-cream md:flex md:min-h-[calc(100svh-84px)] md:flex-col md:justify-center"
+    >
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 px-6 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20 md:w-full md:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.95fr)] md:gap-x-16 lg:px-14">
         <h1 className="order-1 m-0 max-w-[14ch] text-[clamp(40px,6.1vw,88px)] leading-[0.94] font-medium tracking-[-0.038em] md:col-start-1 md:row-start-1">
           {site.heroTitle}
           <span className="font-serif text-[1.02em] font-normal italic">

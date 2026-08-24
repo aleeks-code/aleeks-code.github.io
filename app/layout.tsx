@@ -17,7 +17,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 const title = `${site.name} — ${site.role}`;
-const description = `Portfolio di ${site.name}, ${site.role.toLowerCase()}. Progetti, competenze e contatti.`;
+const description = `Portfolio di ${site.name}, ${site.role}. Progetti, competenze e contatti.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aleeks-code.github.io'),
