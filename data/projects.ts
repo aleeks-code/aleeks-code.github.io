@@ -30,8 +30,8 @@ export const projects: Project[] = [
     },
     tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
     liveUrl: '/demo/ristorante',
-    imageDesktop: 'https://placehold.co/1200x800/8b3a2b/f5ede4?text=Bella+Napoli',
-    imageMobile: 'https://placehold.co/600x1200/8b3a2b/f5ede4?text=Bella+Napoli',
+    imageDesktop: '/projects/bella-napoli-desktop.webp',
+    imageMobile: '/projects/bella-napoli-mobile.webp',
   },
   {
     title: 'FitZone',
@@ -45,8 +45,8 @@ export const projects: Project[] = [
     },
     tags: ['Next.js', 'Tailwind CSS'],
     liveUrl: '/demo/palestra',
-    imageDesktop: 'https://placehold.co/1200x800/0a0a0a/f5ede4?text=FitZone',
-    imageMobile: 'https://placehold.co/600x1200/0a0a0a/f5ede4?text=FitZone',
+    imageDesktop: '/projects/fitzone-desktop.webp',
+    imageMobile: '/projects/fitzone-mobile.webp',
   },
   {
     title: 'Studio Rossi & Associati',
@@ -59,7 +59,7 @@ export const projects: Project[] = [
     },
     tags: ['Next.js', 'Tailwind CSS'],
     liveUrl: '/demo/studio',
-    imageDesktop: 'https://placehold.co/1200x800/0f1b33/f5ede4?text=Studio+Rossi',
-    imageMobile: 'https://placehold.co/600x1200/0f1b33/f5ede4?text=Studio+Rossi',
+    imageDesktop: '/projects/studio-rossi-desktop.webp',
+    imageMobile: '/projects/studio-rossi-mobile.webp',
   },
 ];
