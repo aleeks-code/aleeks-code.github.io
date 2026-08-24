@@ -1,11 +1,28 @@
+import Image from 'next/image';
 import { site } from '@/data/site';
 
 export default function Hero() {
   return (
     <section
       id="top"
-      className="scroll-mt-20 bg-cream md:flex md:min-h-[calc(100svh-84px)] md:flex-col md:justify-center"
+      className="relative isolate scroll-mt-20 overflow-hidden bg-cream md:flex md:min-h-[calc(100svh-84px)] md:flex-col md:justify-center"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(10,20,40,0.09) 1px, transparent 1px)',
+          backgroundSize: '26px 26px',
+        }}
+      />
+      <Image
+        src="/am-mark.png"
+        alt=""
+        aria-hidden="true"
+        width={1254}
+        height={1254}
+        className="pointer-events-none absolute -right-16 -bottom-20 -z-10 hidden h-auto w-[46vw] max-w-[640px] min-w-[420px] opacity-10 md:block"
+      />
       <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 px-6 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20 md:w-full md:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.95fr)] md:gap-x-16 lg:px-14">
         <h1 className="order-1 m-0 max-w-[14ch] text-[clamp(40px,6.1vw,88px)] leading-[0.94] font-medium tracking-[-0.038em] md:col-start-1 md:row-start-1">
           {site.heroTitle}
