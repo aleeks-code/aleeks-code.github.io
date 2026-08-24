@@ -19,10 +19,10 @@ export default function Method() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-9 lg:grid-cols-4">
             {methodSteps.map((step) => (
               <div key={step.number}>
-                <div className="text-sm font-semibold tracking-[0.1em] text-accent tabular-nums">
+                <div className="text-[clamp(40px,4.2vw,56px)] leading-none font-semibold text-white/15 tabular-nums">
                   {step.number}
                 </div>
-                <h3 className="mt-3 text-xl font-semibold tracking-[-0.015em] text-white">
+                <h3 className="mt-2 text-xl font-semibold tracking-[-0.015em] text-white">
                   {step.title}
                 </h3>
                 <p className="mt-2.5 text-[15.5px] leading-relaxed text-white/70">
