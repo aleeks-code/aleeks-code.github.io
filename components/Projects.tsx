@@ -40,8 +40,8 @@ export default function Projects() {
   return (
     <section
       id="progetti"
-      className="relative scroll-mt-20 bg-navy"
-      style={{ height: `${projects.length * 113.34}vh` }}
+      className="relative scroll-mt-20 bg-navy md:h-[var(--projects-scroll-h)]"
+      style={{ ['--projects-scroll-h' as string]: `${projects.length * 113.34}vh` }}
     >
       {/* invisible scroll-position markers driving the desktop showcase below */}
       <div className="pointer-events-none absolute inset-0 hidden md:block">
