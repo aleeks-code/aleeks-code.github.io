@@ -23,6 +23,7 @@ export default function Hero() {
         height={1254}
         className="pointer-events-none absolute -right-16 -bottom-20 -z-10 hidden h-auto w-[46vw] max-w-[640px] min-w-[420px] opacity-10 md:block"
       />
+
       <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 px-6 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20 md:w-full md:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.95fr)] md:gap-x-16 lg:px-14">
         <h1 className="order-1 m-0 max-w-[14ch] text-[clamp(40px,6.1vw,88px)] leading-[0.94] font-medium tracking-[-0.038em] md:col-start-1 md:row-start-1">
           {site.heroTitle}
@@ -31,7 +32,34 @@ export default function Hero() {
           </span>
         </h1>
 
-        <div className="order-3 mt-7 border-t-2 border-navy pt-3 md:order-none md:col-start-2 md:row-start-1 md:mt-0">
+        <div className="relative order-3 mt-7 border-t-2 border-navy pt-3 md:order-none md:col-start-2 md:row-start-1 md:mt-0">
+          {/* decorative browser-window mockup — anchored above this column, never overlaps it regardless of viewport height */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 bottom-full mb-5 hidden w-[220px] -rotate-3 border border-navy/15 bg-cream-dark shadow-[0_24px_60px_-28px_rgba(10,20,40,0.4)] md:block lg:mb-6 lg:w-[260px]"
+          >
+            <div className="flex items-center gap-1.5 border-b border-navy/15 bg-cream-darker px-3 py-2">
+              <span className="h-2 w-2 rounded-full bg-coral" />
+              <span className="h-2 w-2 rounded-full bg-brand/55" />
+              <span className="h-2 w-2 rounded-full bg-navy/25" />
+            </div>
+            <div className="space-y-2 p-3">
+              <div className="flex items-center justify-between">
+                <span className="h-1.5 w-8 rounded-full bg-navy/30" />
+                <div className="flex gap-1">
+                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
+                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
+                  <span className="h-1.5 w-5 rounded-full bg-navy/15" />
+                </div>
+              </div>
+              <div className="h-12 rounded-sm bg-brand/12" />
+              <div className="space-y-1">
+                <span className="block h-1.5 w-full rounded-full bg-navy/12" />
+                <span className="block h-1.5 w-4/5 rounded-full bg-navy/12" />
+              </div>
+              <span className="inline-block h-4 w-14 rounded-full bg-coral" />
+            </div>
+          </div>
           <p className="mt-4 text-[16.5px] leading-relaxed text-ink">{site.tagline}</p>
           <a
             href="#progetti"
