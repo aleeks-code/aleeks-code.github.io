@@ -151,8 +151,15 @@ export default function Projects() {
                     {project.detail.interfaceNote}
                   </dd>
                   <dt className="text-sm text-white/50">Tecnologie</dt>
-                  <dd className="m-0 text-sm leading-relaxed text-white/55">
-                    {project.tags.join(' · ')}
+                  <dd className="m-0 flex flex-wrap gap-1.5">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-white/20 bg-white/5 px-2.5 py-0.5 text-[11.5px] font-medium tracking-[0.01em] text-white/70"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </dd>
                 </dl>
               </div>
@@ -330,7 +337,16 @@ export default function Projects() {
           <p className="mt-2 text-[15.5px] leading-relaxed text-white/78">
             {activeProject.detail.objective}
           </p>
-          <p className="mt-2.5 text-sm text-white/50">{activeProject.tags.join(' · ')}</p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {activeProject.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-white/20 bg-white/5 px-2.5 py-0.5 text-[11.5px] font-medium tracking-[0.01em] text-white/70"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
 
         {activeProject.liveUrl && (
