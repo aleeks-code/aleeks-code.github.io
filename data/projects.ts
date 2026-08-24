@@ -1,47 +1,65 @@
+export interface ProjectDetail {
+  objective: string;
+  choice: string;
+  interfaceNote: string;
+}
+
 export interface Project {
   title: string;
-  description: string;
-  role?: string;
-  impact?: string;
+  sector: string;
+  caption: string;
+  detail: ProjectDetail;
   tags: string[];
   repoUrl?: string;
   liveUrl?: string;
-  accentFrom: string;
-  accentTo: string;
+  imageDesktop: string;
+  imageMobile: string;
 }
 
 export const projects: Project[] = [
   {
     title: 'Bella Napoli',
-    description:
-      'Sito vetrina per un ristorante italiano: menu, prenotazioni e orari sempre aggiornati. Progetto dimostrativo.',
-    role: 'Progetto demo',
-    impact: 'Pensato per convertire chi cerca "ristorante vicino a me" in una prenotazione.',
-    tags: ['Next.js', 'Tailwind CSS'],
+    sector: 'Ristorazione',
+    caption: 'Prenotazione e menu sempre a un dito di distanza, anche a tavola.',
+    detail: {
+      objective: 'Rendere menu, orari e prenotazione immediatamente accessibili.',
+      choice:
+        'Navigazione semplice, atmosfera calda e CTA di prenotazione sempre riconoscibile.',
+      interfaceNote:
+        'La prenotazione resta raggiungibile da ogni schermata, anche scorrendo il menu.',
+    },
+    tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
     liveUrl: '/demo/ristorante',
-    accentFrom: '#8b3a2b',
-    accentTo: '#c9a227',
+    imageDesktop: 'https://placehold.co/1200x800/8b3a2b/f5ede4?text=Bella+Napoli',
+    imageMobile: 'https://placehold.co/600x1200/8b3a2b/f5ede4?text=Bella+Napoli',
   },
   {
     title: 'FitZone',
-    description:
-      'Landing page per una palestra: corsi, orari e call-to-action per la prova gratuita. Progetto dimostrativo.',
-    role: 'Progetto demo',
-    impact: 'Stile energico pensato per convertire i visitatori in nuovi iscritti.',
+    sector: 'Palestra',
+    caption: 'Una sola azione ripetuta lungo la pagina: prenota la prova gratuita.',
+    detail: {
+      objective: 'Trasformare le visite in richieste per una prova gratuita.',
+      choice:
+        'Ritmo energico, struttura orientata all’azione e ripetizione controllata della CTA.',
+      interfaceNote: 'Una sola azione a ogni cambio di sezione, con un form breve in chiusura.',
+    },
     tags: ['Next.js', 'Tailwind CSS'],
     liveUrl: '/demo/palestra',
-    accentFrom: '#0a0a0a',
-    accentTo: '#2e2e2e',
+    imageDesktop: 'https://placehold.co/1200x800/0a0a0a/f5ede4?text=FitZone',
+    imageMobile: 'https://placehold.co/600x1200/0a0a0a/f5ede4?text=FitZone',
   },
   {
     title: 'Studio Rossi & Associati',
-    description:
-      'Sito vetrina per uno studio professionale: aree di competenza e contatti diretti. Progetto dimostrativo.',
-    role: 'Progetto demo',
-    impact: 'Immagine sobria e affidabile per un’attività di consulenza.',
+    sector: 'Studio legale',
+    caption: 'Gerarchia di sole parole: le aree di competenza prima di tutto.',
+    detail: {
+      objective: 'Comunicare autorevolezza e rendere consultabili le aree di competenza.',
+      choice: 'Gerarchia tipografica sobria, navigazione chiara e contatto diretto.',
+      interfaceNote: 'Aree di competenza in indice; i contatti restano a portata da ogni sezione.',
+    },
     tags: ['Next.js', 'Tailwind CSS'],
     liveUrl: '/demo/studio',
-    accentFrom: '#0f1b33',
-    accentTo: '#b08d3d',
+    imageDesktop: 'https://placehold.co/1200x800/0f1b33/f5ede4?text=Studio+Rossi',
+    imageMobile: 'https://placehold.co/600x1200/0f1b33/f5ede4?text=Studio+Rossi',
   },
 ];

@@ -2,48 +2,40 @@ import { site } from '@/data/site';
 
 export default function Hero() {
   return (
-    <section
-      id="top"
-      className="scroll-mt-20 relative overflow-hidden bg-navy px-4 py-28 text-center text-white"
-    >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -right-24 -top-24 h-96 w-96 rotate-12 rounded-full bg-brand/20 blur-3xl" />
-        <div className="absolute -left-16 bottom-0 h-64 w-64 -rotate-12 rounded-full bg-brand/10 blur-2xl" />
-        <svg
-          className="absolute right-0 top-0 h-full w-1/3 opacity-20"
-          viewBox="0 0 200 400"
-          preserveAspectRatio="none"
-        >
-          <polygon points="200,0 200,400 80,400" fill="url(#hero-cut)" />
-          <defs>
-            <linearGradient id="hero-cut" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#2e5bff" />
-              <stop offset="100%" stopColor="#0b1330" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-      <div className="mx-auto max-w-4xl">
-        <p className="font-mono text-sm font-medium uppercase tracking-widest text-brand">
-          {site.role}
-        </p>
-        <h1 className="mt-3 font-display text-5xl sm:text-6xl font-bold">{site.name}</h1>
-        <p className="mt-4 text-lg text-slate-300">{site.tagline}</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
+    <section id="top" className="scroll-mt-20 bg-cream">
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 px-6 pt-12 pb-14 sm:px-8 sm:pt-16 sm:pb-20 md:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.95fr)] md:gap-x-16 lg:px-14">
+        <h1 className="order-1 m-0 max-w-[14ch] text-[clamp(40px,6.1vw,88px)] leading-[0.94] font-medium tracking-[-0.038em] md:col-start-1 md:row-start-1">
+          {site.heroTitle}
+          <span className="font-serif text-[1.02em] font-normal italic">
+            {site.heroTitleAccent}
+          </span>
+        </h1>
+
+        <div className="order-3 mt-7 border-t-2 border-navy pt-3 md:order-none md:col-start-2 md:row-start-1 md:mt-0">
+          <p className="mt-4 text-[16.5px] leading-relaxed text-ink">{site.tagline}</p>
           <a
-            href="#projects"
-            className="inline-block rounded-md bg-brand px-6 py-3 font-medium text-white transition-colors duration-200 hover:bg-brand-dark focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            href="#progetti"
+            className="mt-7 flex items-center justify-between bg-brand px-[22px] py-5 text-lg font-semibold text-white transition-all duration-200 hover:bg-brand-dark hover:pl-8"
           >
-            Guarda i miei progetti
+            <span>Esplora i progetti</span>
+            <span className="text-xl">→</span>
           </a>
-          {site.cvUrl && (
-            <a
-              href={site.cvUrl}
-              className="inline-block rounded-md border border-white/30 px-6 py-3 font-medium text-white transition-colors duration-200 hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
-            >
-              Scarica CV
-            </a>
-          )}
+          <a
+            href="#contatti"
+            className="mt-4 inline-flex items-center gap-2.5 border-b border-border-muted pb-1 text-[15.5px] text-ink transition-colors duration-200 hover:border-navy hover:text-navy"
+          >
+            <span>Raccontami la tua idea</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div className="order-2 mt-7 md:order-none md:col-start-1 md:row-start-2 md:mt-11">
+          <div className="text-[clamp(26px,2.6vw,36px)] leading-[1.06] font-semibold tracking-[-0.025em]">
+            {site.heroLine1}
+          </div>
+          <div className="text-[clamp(26px,2.6vw,36px)] leading-[1.06] font-semibold tracking-[-0.025em] text-brand">
+            {site.heroLine2}
+          </div>
         </div>
       </div>
     </section>

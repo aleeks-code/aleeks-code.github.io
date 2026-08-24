@@ -34,7 +34,7 @@ describe('Contact', () => {
     fillAndSubmit();
 
     await waitFor(() =>
-      expect(screen.getByText(/grazie.*messaggio/i)).toBeInTheDocument()
+      expect(screen.getByText(/richiesta inviata/i)).toBeInTheDocument()
     );
   });
 
@@ -76,7 +76,7 @@ describe('Contact', () => {
     resolveFetch({ ok: true });
 
     await waitFor(() =>
-      expect(screen.getByText(/grazie.*messaggio/i)).toBeInTheDocument()
+      expect(screen.getByText(/richiesta inviata/i)).toBeInTheDocument()
     );
   });
 
@@ -89,6 +89,27 @@ describe('Contact', () => {
     await waitFor(() =>
       expect(screen.getByText(/non è ancora configurato/i)).toBeInTheDocument()
     );
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('shows an inline validation message and skips the network call when the email is invalid', async () => {
+    render(<Contact />);
+
+    fireEvent.change(screen.getByLabelText(/nome/i), {
+      target: { value: 'Jane Doe' },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'not-an-email' },
+    });
+    fireEvent.change(screen.getByLabelText(/messaggio/i), {
+      target: { value: 'Hello there' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /invia/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/indirizzo email valido/i)).toBeInTheDocument()
+    );
+    expect(screen.getByLabelText(/email/i)).toHaveAttribute('aria-invalid', 'true');
     expect(global.fetch).not.toHaveBeenCalled();
   });
 });

@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
+    remotePatterns: [{ protocol: 'https', hostname: 'placehold.co' }],
   },
   // cacheComponents intentionally left off (its default): this app has no
   // dynamic routes or data fetching, and as of Next 16 the flag has open

@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { Familjen_Grotesk, Instrument_Serif } from 'next/font/google';
 import { site } from '@/data/site';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const jetbrainsMono = JetBrains_Mono({
+const familjenGrotesk = Familjen_Grotesk({
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-  weight: ['400', '500', '700'],
+  variable: '--font-familjen',
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
 });
-const spaceGrotesk = Space_Grotesk({
+const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  weight: ['500', '600', '700'],
+  variable: '--font-instrument-serif',
+  weight: '400',
+  style: ['normal', 'italic'],
 });
 
 const title = `${site.name} — ${site.role}`;
@@ -54,9 +55,9 @@ export default function RootLayout({
   return (
     <html
       lang="it"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
+      className={`${familjenGrotesk.variable} ${instrumentSerif.variable}`}
     >
-      <body className="bg-white text-slate-900 font-sans antialiased">
+      <body className="bg-cream text-navy font-sans antialiased">
         {children}
       </body>
     </html>
